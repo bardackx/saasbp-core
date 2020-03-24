@@ -12,9 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.saasbp.auth.application.port.in.EmailAlreadyUsedException;
-import com.saasbp.auth.application.port.in.InvalidCode;
+import com.saasbp.auth.application.port.in.InvalidCodeException;
 import com.saasbp.auth.application.port.in.SignInUseCase;
-import com.saasbp.auth.application.port.in.UserNotFound;
+import com.saasbp.auth.application.port.in.UserNotFoundException;
 import com.saasbp.auth.application.port.out.CreateHashedPasswordWithRandomSalt;
 import com.saasbp.auth.application.port.out.FindEmailConfirmationByCode;
 import com.saasbp.auth.application.port.out.FindUserByEmail;
@@ -81,7 +81,7 @@ public class SignInTest {
 		useCase.signIn(email, "randomPassword123");
 	}
 
-	@Test(expected = UserNotFound.class)
+	@Test(expected = UserNotFoundException.class)
 	public void userNotFoundOnSendConfirmationEmailTest() {
 		useCase.resendConfirmationEmail("random@email.com");
 	}
@@ -104,7 +104,7 @@ public class SignInTest {
 				.sendEmailConfirmationEmail(argThat(e -> uuid.equals(e.getUuid()) && email.equals(e.getEmail())));
 	}
 
-	@Test(expected = InvalidCode.class)
+	@Test(expected = InvalidCodeException.class)
 	public void invalidEmailConfirmationCodeOnConfirmEmail() {
 		useCase.confirmEmail(UUID.randomUUID());
 	}

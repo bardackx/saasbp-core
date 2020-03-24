@@ -15,14 +15,14 @@ public interface SignInUseCase {
 	/**
 	 * 
 	 * @param uuid
-	 * @throws InvalidCode
+	 * @throws InvalidCodeException
 	 */
 	void confirmEmail(UUID confirmationCode);
 
 	/**
 	 * 
 	 * @param email
-	 * @throws UserNotFound
+	 * @throws UserNotFoundException
 	 */
 	void resendConfirmationEmail(String email);
 

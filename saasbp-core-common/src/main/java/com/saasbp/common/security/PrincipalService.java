@@ -7,12 +7,12 @@ public interface PrincipalService {
 	/**
 	 * 
 	 * @return
-	 * @throws PrincipalIsNotAuthenticated
+	 * @throws PrincipalIsNotAuthenticatedException
 	 */
 	default Principal getAuthenticatedCaller() {
 		Principal caller = getCaller();
 		if (caller.isAnonymous())
-			throw new PrincipalIsNotAuthenticated();
+			throw new PrincipalIsNotAuthenticatedException();
 		return caller;
 	};
 }

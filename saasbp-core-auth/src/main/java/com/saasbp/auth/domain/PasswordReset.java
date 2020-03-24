@@ -24,7 +24,7 @@ public class PasswordReset {
 
 	public void fulfill() {
 		if (isExpired())
-			throw new ExpiredPasswordReset();
+			throw new ExpiredPasswordResetException();
 		fulfilled = true;
 	}
 

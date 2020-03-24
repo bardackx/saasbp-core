@@ -2,10 +2,10 @@ package com.saasbp.auth.application.service;
 
 import java.util.UUID;
 
-import com.saasbp.auth.application.port.in.InvalidCode;
+import com.saasbp.auth.application.port.in.InvalidCodeException;
 import com.saasbp.auth.application.port.in.PasswordResetUseCase;
-import com.saasbp.auth.application.port.in.UserEmailIsNotConfirmed;
-import com.saasbp.auth.application.port.in.UserNotFound;
+import com.saasbp.auth.application.port.in.UserEmailIsNotConfirmedException;
+import com.saasbp.auth.application.port.in.UserNotFoundException;
 import com.saasbp.auth.application.port.out.CreateHashedPasswordWithRandomSalt;
 import com.saasbp.auth.application.port.out.FindPasswordResetByCode;
 import com.saasbp.auth.application.port.out.FindUserByEmail;
@@ -41,10 +41,10 @@ public class PasswordResetService implements PasswordResetUseCase {
 
 		User user = findUserByEmail //
 				.findUserByEmail(email) //
-				.orElseThrow(() -> new UserNotFound("email", email));
+				.orElseThrow(() -> new UserNotFoundException("email", email));
 
 		if (!user.getEmailConfirmation().isConfirmed())
-			throw new UserEmailIsNotConfirmed();
+			throw new UserEmailIsNotConfirmedException();
 
 		PasswordReset e = new PasswordReset(email);
 
@@ -57,13 +57,13 @@ public class PasswordResetService implements PasswordResetUseCase {
 
 		PasswordReset passwordReset = findPasswordResetByCode //
 				.findPasswordResetByCode(code) //
-				.orElseThrow(() -> new InvalidCode());
+				.orElseThrow(() -> new InvalidCodeException());
 
 		passwordReset.fulfill();
 
 		User user = findUserByEmail //
 				.findUserByEmail(passwordReset.getEmail()) //
-				.orElseThrow(() -> new UserNotFound("mail", passwordReset.getEmail()));
+				.orElseThrow(() -> new UserNotFoundException("mail", passwordReset.getEmail()));
 
 		user.setPassword(hashedPasswordFactory.createHashedPasswordWithRandomSalt(newPassword));
 

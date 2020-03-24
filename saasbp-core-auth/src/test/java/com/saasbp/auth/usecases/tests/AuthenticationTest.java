@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.saasbp.auth.application.port.in.AuthenticationUseCase;
-import com.saasbp.auth.application.port.in.CredentialsDontMatch;
+import com.saasbp.auth.application.port.in.CredentialsDontMatchException;
 import com.saasbp.auth.application.port.out.CreateHashedPassword;
 import com.saasbp.auth.application.port.out.FindUserByEmail;
 import com.saasbp.auth.application.service.AuthenticationService;
@@ -66,7 +66,7 @@ public class AuthenticationTest {
 		assertEquals(expected, actual);
 	}
 
-	@Test(expected = CredentialsDontMatch.class)
+	@Test(expected = CredentialsDontMatchException.class)
 	public void credentialsDontMatchOnAuthenticateUserByEmailTest() {
 
 		final String email = "valid@email.com";
@@ -91,7 +91,7 @@ public class AuthenticationTest {
 		useCase.authenticateUserByEmail(email, password);
 	}
 
-	@Test(expected = CredentialsDontMatch.class)
+	@Test(expected = CredentialsDontMatchException.class)
 	public void credentialsDontMatchOnFalseEmailOnAuthenticateUserByEmailTest() {
 
 		final String email = "false@email.com";

@@ -13,10 +13,10 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.saasbp.auth.application.port.in.InvalidCode;
-import com.saasbp.auth.application.port.in.PrincipalIsNotUser;
-import com.saasbp.auth.application.port.in.UserEmailIsNotConfirmed;
-import com.saasbp.auth.application.port.in.UserNotFound;
+import com.saasbp.auth.application.port.in.InvalidCodeException;
+import com.saasbp.auth.application.port.in.PrincipalIsNotUserException;
+import com.saasbp.auth.application.port.in.UserEmailIsNotConfirmedException;
+import com.saasbp.auth.application.port.in.UserNotFoundException;
 import com.saasbp.auth.application.port.out.FindEmailResetByCode;
 import com.saasbp.auth.application.port.out.FindUserByUuid;
 import com.saasbp.auth.application.port.out.SaveEmailReset;
@@ -115,7 +115,7 @@ public class EmailResetTests {
 
 	}
 
-	@Test(expected = UserEmailIsNotConfirmed.class)
+	@Test(expected = UserEmailIsNotConfirmedException.class)
 	public void emailIsNotConfirmedOnResetEmailTest() {
 
 		final UUID uuid = UUID.randomUUID();
@@ -136,19 +136,19 @@ public class EmailResetTests {
 		useCase.requestEmailReset(uuid, newEmail);
 	}
 
-	@Test(expected = UserNotFound.class)
+	@Test(expected = UserNotFoundException.class)
 	public void userNotFoundOnResetEmailTest() {
 		final UUID userUuid = UUID.randomUUID();
 		final String newEmail = "new@example.com";
 		useCase.requestEmailReset(userUuid, newEmail);
 	}
 
-	@Test(expected = InvalidCode.class)
+	@Test(expected = InvalidCodeException.class)
 	public void invalidPasswordResetCodeOnFulfillPasswordTest() {
 		useCase.fulfillEmailReset(UUID.randomUUID());
 	}
 
-	@Test(expected = PrincipalIsNotUser.class)
+	@Test(expected = PrincipalIsNotUserException.class)
 	public void principalIsNotUserOnRequestEmailResetTest() {
 
 		final UUID uuid = UUID.randomUUID();

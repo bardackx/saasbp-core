@@ -3,10 +3,10 @@ package com.saasbp.auth.application.service;
 import java.util.UUID;
 
 import com.saasbp.auth.application.port.in.EmailResetUseCase;
-import com.saasbp.auth.application.port.in.InvalidCode;
-import com.saasbp.auth.application.port.in.PrincipalIsNotUser;
-import com.saasbp.auth.application.port.in.UserEmailIsNotConfirmed;
-import com.saasbp.auth.application.port.in.UserNotFound;
+import com.saasbp.auth.application.port.in.InvalidCodeException;
+import com.saasbp.auth.application.port.in.PrincipalIsNotUserException;
+import com.saasbp.auth.application.port.in.UserEmailIsNotConfirmedException;
+import com.saasbp.auth.application.port.in.UserNotFoundException;
 import com.saasbp.auth.application.port.out.FindEmailResetByCode;
 import com.saasbp.auth.application.port.out.FindUserByUuid;
 import com.saasbp.auth.application.port.out.SaveEmailReset;
@@ -45,13 +45,13 @@ public class EmailResetService implements EmailResetUseCase {
 
 		User user = findUserByUuid //
 				.findUserByUuid(userUuid) //
-				.orElseThrow(() -> new UserNotFound("uuid", userUuid.toString()));
+				.orElseThrow(() -> new UserNotFoundException("uuid", userUuid.toString()));
 
 		if (!caller.getId().equals(user.getUuid()))
-			throw new PrincipalIsNotUser();
+			throw new PrincipalIsNotUserException();
 
 		if (!user.getEmailConfirmation().isConfirmed())
-			throw new UserEmailIsNotConfirmed();
+			throw new UserEmailIsNotConfirmedException();
 
 		EmailReset e = new EmailReset(userUuid, newEmail);
 
@@ -63,13 +63,13 @@ public class EmailResetService implements EmailResetUseCase {
 	public void fulfillEmailReset(UUID code) {
 
 		EmailReset emailReset = findEmailResetByCode.findEmailResetByCode(code) //
-				.orElseThrow(() -> new InvalidCode());
+				.orElseThrow(() -> new InvalidCodeException());
 
 		emailReset.fulfill();
 
 		User user = findUserByUuid //
 				.findUserByUuid(emailReset.getUser()) //
-				.orElseThrow(() -> new UserNotFound("uuid", emailReset.getUser().toString()));
+				.orElseThrow(() -> new UserNotFoundException("uuid", emailReset.getUser().toString()));
 
 		user.setEmail(emailReset.getNewEmail());
 

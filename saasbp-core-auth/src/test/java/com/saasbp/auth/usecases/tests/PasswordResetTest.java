@@ -13,9 +13,9 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.saasbp.auth.application.port.in.InvalidCode;
-import com.saasbp.auth.application.port.in.UserEmailIsNotConfirmed;
-import com.saasbp.auth.application.port.in.UserNotFound;
+import com.saasbp.auth.application.port.in.InvalidCodeException;
+import com.saasbp.auth.application.port.in.UserEmailIsNotConfirmedException;
+import com.saasbp.auth.application.port.in.UserNotFoundException;
 import com.saasbp.auth.application.port.out.CreateHashedPasswordWithRandomSalt;
 import com.saasbp.auth.application.port.out.FindPasswordResetByCode;
 import com.saasbp.auth.application.port.out.FindUserByEmail;
@@ -114,7 +114,7 @@ public class PasswordResetTest {
 		verify(saveUser).saveUser(expectedSaveUser);
 	}
 
-	@Test(expected = UserEmailIsNotConfirmed.class)
+	@Test(expected = UserEmailIsNotConfirmedException.class)
 	public void emailIsNotConfirmedOnResetPasswordTest() {
 
 		final String email = "name@example.com";
@@ -129,12 +129,12 @@ public class PasswordResetTest {
 		useCase.requestPasswordReset(email);
 	}
 
-	@Test(expected = UserNotFound.class)
+	@Test(expected = UserNotFoundException.class)
 	public void userNotFoundOnResetPasswordTest() {
 		useCase.requestPasswordReset("non-existing@gmail.com");
 	}
 
-	@Test(expected = InvalidCode.class)
+	@Test(expected = InvalidCodeException.class)
 	public void invalidPasswordResetCodeOnFulfillPasswordTest() {
 		useCase.fulfillPasswordReset(UUID.randomUUID(), "N3w_P4s5W0rD");
 	}

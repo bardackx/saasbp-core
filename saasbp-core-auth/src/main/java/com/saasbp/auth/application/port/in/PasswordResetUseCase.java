@@ -7,7 +7,7 @@ public interface PasswordResetUseCase {
 	/**
 	 * 
 	 * @param email
-	 * @throws UserNotFound
+	 * @throws UserNotFoundException
 	 */
 	void requestPasswordReset(String email);
 
@@ -15,7 +15,7 @@ public interface PasswordResetUseCase {
 	 * 
 	 * @param code
 	 * @param newPassword
-	 * @throws InvalidCode
+	 * @throws InvalidCodeException
 	 */
 	void fulfillPasswordReset(UUID code, String newPassword);
 }

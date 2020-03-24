@@ -26,7 +26,7 @@ public class EmailReset {
 
 	public void fulfill() {
 		if (isExpired())
-			throw new ExpiredEmailReset();
+			throw new ExpiredEmailResetException();
 		fulfilled = true;
 	}
 

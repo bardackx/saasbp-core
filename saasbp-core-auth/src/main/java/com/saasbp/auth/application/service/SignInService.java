@@ -3,9 +3,9 @@ package com.saasbp.auth.application.service;
 import java.util.UUID;
 
 import com.saasbp.auth.application.port.in.EmailAlreadyUsedException;
-import com.saasbp.auth.application.port.in.InvalidCode;
+import com.saasbp.auth.application.port.in.InvalidCodeException;
 import com.saasbp.auth.application.port.in.SignInUseCase;
-import com.saasbp.auth.application.port.in.UserNotFound;
+import com.saasbp.auth.application.port.in.UserNotFoundException;
 import com.saasbp.auth.application.port.out.CreateHashedPasswordWithRandomSalt;
 import com.saasbp.auth.application.port.out.FindEmailConfirmationByCode;
 import com.saasbp.auth.application.port.out.FindUserByEmail;
@@ -63,7 +63,7 @@ public class SignInService implements SignInUseCase {
 
 		User user = findUserByEmail //
 				.findUserByEmail(email) //
-				.orElseThrow(() -> new UserNotFound("email", email));
+				.orElseThrow(() -> new UserNotFoundException("email", email));
 
 		sendNotificationEmail.sendEmailConfirmationEmail(user);
 	}
@@ -72,7 +72,7 @@ public class SignInService implements SignInUseCase {
 
 		EmailConfirmation confirmation = findEmailConfirmationByCode //
 				.findEmailConfirmationByCode(uuid) //
-				.orElseThrow(() -> new InvalidCode());
+				.orElseThrow(() -> new InvalidCodeException());
 
 		confirmation.setConfirmed(true);
 

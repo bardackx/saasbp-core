@@ -8,7 +8,7 @@ public interface EmailResetUseCase {
 	 * 
 	 * @param uuid
 	 * @param newEmail
-	 * @throws UserNotFound
+	 * @throws UserNotFoundException
 	 */
 	void requestEmailReset(UUID uuid, String newEmail);
 
@@ -16,7 +16,7 @@ public interface EmailResetUseCase {
 	 * 
 	 * @param code
 	 * @param newPassword
-	 * @throws InvalidCode
+	 * @throws InvalidCodeException
 	 */
 	void fulfillEmailReset(UUID code);
 }
